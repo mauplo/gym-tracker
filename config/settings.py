@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',   # Django REST Framework
     'rest_framework.authtoken', # tokens para llamadas a la API
-    'workouts',         # nuestra app
+    'drf_spectacular', # para generar documentación de la API en /api/schema/ y /api/docs/
+    'workouts',   # nuestra app
 ]
 
 MIDDLEWARE = [
@@ -125,10 +126,18 @@ STATIC_URL = 'static/'
 # Configuración DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',  # mantenemos sesión para la interfaz navegable
+        'rest_framework.authentication.TokenAuthentication', # autenticazión con headers 'Authorization: Token <tu-token>'
+        'rest_framework.authentication.SessionAuthentication',  # mantenemos sesión para la interfaz navegable (pruebas con login/logout)
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated', # por defecto, todas las vistas requieren autenticación
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', # para generar documentación de la API
+}
+
+# metadata para la documentación de la API (drf-spectacular)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Gym Tracker API',
+    'DESCRIPTION': 'API para registrar rutinas, sesiones de entrenamiento y progreso de ejercicios.',
+    'VERSION': '1.0.0',
 }

@@ -12,7 +12,8 @@ from .serializers import (
 )
 
 
-class EsPropietarioOSoloLectura(permissions.BasePermission):
+
+class EsPropietarioOSoloLectura(permissions.BasePermission): # permiso personalizado a nivel del objeto, podemos cambiar si es público/privado
     """
     Cualquier usuario autenticado puede leer.
     Solo el dueño del objeto puede editarlo o borrarlo.
@@ -54,10 +55,10 @@ class SesionEntrenamientoViewSet(viewsets.ModelViewSet):
     serializer_class = SesionEntrenamientoSerializer
     permission_classes = [permissions.IsAuthenticated, EsPropietarioOSoloLectura]
 
-    def get_queryset(self):
+    def get_queryset(self): # filtrado por usuario, autorización a nivel objeto
         return SesionEntrenamiento.objects.filter(usuario=self.request.user)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer): # asigna al dueño
         serializer.save(usuario=self.request.user)
 
 
