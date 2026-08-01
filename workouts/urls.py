@@ -4,7 +4,7 @@ from .views import (
     SesionEntrenamientoViewSet, RegistroSerieViewSet
 )
 
-router = DefaultRouter()
+router = DefaultRouter() # generamos los URLs REST para cada ViewSet automáticamente (GET/POST/PUT/DELETE)
 router.register(r'ejercicios', EjercicioViewSet, basename='ejercicio')
 router.register(r'rutinas', RutinaViewSet, basename='rutina')
 router.register(r'sesiones', SesionEntrenamientoViewSet, basename='sesion')
