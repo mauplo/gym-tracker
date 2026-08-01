@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
+from django.db.models import Max
 from .forms import SignUpForm, SesionEntrenamientoForm, RegistroSerieFormSet
-
+import json
 # Create your views here.
 # ViewSets: la lógica que conecta URLs con lógica de negocio (listar, crear, editar, borrar)
 # Permissions: deciden quién puede ver/editar qué (cada usuario solo sus propios datos)
@@ -135,4 +136,26 @@ def sesion_crear_view(request):
     return render(request, 'workouts/sesion_form.html', {
         'sesion_form': sesion_form,
         'formset': formset,
+    })
+# Vista para gráfica de progreso de un ejercicio específico
+@login_required
+def progreso_ejercicio_view(request, ejercicio_id):
+    ejercicio = get_object_or_404(Ejercicio, id=ejercicio_id)
+
+    registros = (
+        RegistroSerie.objects
+        .filter(sesion__usuario=request.user, ejercicio=ejercicio)
+        .values('sesion__fecha')
+        .annotate(peso_maximo=Max('peso'))
+        .order_by('sesion__fecha')
+    )
+
+    fechas = [r['sesion__fecha'].strftime('%Y-%m-%d') for r in registros]
+    pesos = [float(r['peso_maximo']) for r in registros]
+
+    return render(request, 'workouts/progreso.html', {
+        'ejercicio': ejercicio,
+        'fechas_json': json.dumps(fechas),
+        'pesos_json': json.dumps(pesos),
+        'tiene_datos': len(fechas) > 0,
     })

@@ -8,6 +8,8 @@
     {% for re in rutina.rutinaejercicio_set.all %}
         <div class="card">
             {{ re.ejercicio.nombre }} — {{ re.series_objetivo }} series x {{ re.reps_objetivo }} reps
+            <br>
+            <a href="{% url 'progreso_ejercicio' re.ejercicio.id %}">Ver progreso →</a>
         </div>
     {% empty %}
         <p>Esta rutina todavía no tiene ejercicios asignados.</p>

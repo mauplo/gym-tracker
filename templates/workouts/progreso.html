@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Progreso: {{ ejercicio.nombre }}{% endblock %}
+{% block content %}
+    <h1>Progreso — {{ ejercicio.nombre }} ({{ ejercicio.get_tipo_equipo_display }})</h1>
+
+    {% if tiene_datos %}
+        <canvas id="graficaProgreso" height="100"></canvas>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+        <script>
+            const ctx = document.getElementById('graficaProgreso');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ fechas_json|safe }},
+                    datasets: [{
+                        label: 'Peso máximo por sesión (kg)',
+                        data: {{ pesos_json|safe }},
+                        borderColor: '#222',
+                        backgroundColor: 'rgba(34, 34, 34, 0.1)',
+                        tension: 0.2,
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: false }
+                    }
+                }
+            });
+        </script>
+    {% else %}
+        <p>Todavía no tienes registros para este ejercicio.</p>
+    {% endif %}
+{% endblock %}

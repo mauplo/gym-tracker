@@ -24,4 +24,5 @@ frontend_urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('rutinas/<int:rutina_id>/', views.rutina_detalle_view, name='rutina_detalle'),
     path('sesiones/nueva/', views.sesion_crear_view, name='sesion_crear'),  
+    path('progreso/<int:ejercicio_id>/', views.progreso_ejercicio_view, name='progreso_ejercicio'),
 ]
