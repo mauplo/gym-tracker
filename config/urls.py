@@ -16,15 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from rest_framework.authtoken.views import obtain_auth_token
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from workouts.urls import api_urlpatterns, frontend_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('workouts.urls')),
+     # Frontend (páginas HTML)
+    path('', include(frontend_urlpatterns)),
+    path('', RedirectView.as_view(pattern_name='dashboard', permanent=False)), # redirige la raíz del sitio a /dashboard/ (página principal)
+    # API (endpoints REST)
+    path('api/', include(api_urlpatterns)), # path('api/', include('workouts.urls')),
     path('api-auth/', include('rest_framework.urls')),  # login/logout navegable para pruebas
     path('api/token/', obtain_auth_token),  # POST username/password, recibe un token
-
     # Documentación de la API
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'), # OpenAPI crudo (JSON/YAML)
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'), # Interfaz Swagger navegable (Documentación interactiva para probar endpoints)

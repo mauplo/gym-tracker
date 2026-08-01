@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}{{ rutina.nombre }}{% endblock %}
+{% block content %}
+    <h1>{{ rutina.nombre }}</h1>
+    <p>{{ rutina.descripcion }}</p>
+
+    <h2>Ejercicios</h2>
+    {% for re in rutina.rutinaejercicio_set.all %}
+        <div class="card">
+            {{ re.ejercicio.nombre }} — {{ re.series_objetivo }} series x {{ re.reps_objetivo }} reps
+        </div>
+    {% empty %}
+        <p>Esta rutina todavía no tiene ejercicios asignados.</p>
+    {% endfor %}
+{% endblock %}

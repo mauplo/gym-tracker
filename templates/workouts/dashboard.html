@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+    <h1>Tus rutinas</h1>
+
+    {% if rutinas %}
+        {% for rutina in rutinas %}
+            <div class="card">
+                <strong><a href="{% url 'rutina_detalle' rutina.id %}">{{ rutina.nombre }}</a></strong>
+                <p>{{ rutina.descripcion }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Todavía no tienes rutinas. Créalas desde el <a href="/admin/workouts/rutina/add/">panel de administración</a> por ahora (haremos un formulario propio en el siguiente paso).</p>
+    {% endif %}
+
+    <h2>Sesiones recientes</h2>
+    {% if sesiones_recientes %}
+        {% for sesion in sesiones_recientes %}
+            <div class="card">
+                <strong>{{ sesion.fecha|date:"d M Y" }}</strong>
+                {% if sesion.rutina %} — {{ sesion.rutina.nombre }}{% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Aún no has registrado ninguna sesión de entrenamiento.</p>
+    {% endif %}
+{% endblock %}

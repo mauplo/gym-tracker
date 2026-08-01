@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gym Progress Tracker{% endblock %}</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; color: #222; }
+        nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #ddd; padding-bottom: 15px; }
+        nav a { margin-right: 15px; text-decoration: none; color: #333; }
+        .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+        .btn { display: inline-block; padding: 8px 16px; background: #222; color: white; text-decoration: none; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; }
+        form p { margin-bottom: 12px; }
+        input, textarea, select { padding: 6px; width: 100%; box-sizing: border-box; }
+        .errorlist { color: #c0392b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div>
+            <a href="{% url 'dashboard' %}"><strong>Gym Tracker</strong></a> <!-- Enlace al dashboard -->
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                <span>Hola, {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                    {% csrf_token %}  <!-- Protección CSRF para el formulario de logout -->
+                    <button type="submit" class="btn" style="background:#888;">Salir</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">Iniciar sesión</a>
+                <a href="{% url 'signup' %}">Registrarme</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="card">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}<!-- Para heredar contenido en otras plantillas -->{% endblock %} 
+</body>
+</html>

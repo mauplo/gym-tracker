@@ -1,4 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
+from django.contrib import messages
+from .forms import SignUpForm
 
 # Create your views here.
 # ViewSets: la lógica que conecta URLs con lógica de negocio (listar, crear, editar, borrar)
@@ -69,3 +73,34 @@ class RegistroSerieViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # solo registros de sesiones que pertenecen al usuario autenticado
         return RegistroSerie.objects.filter(sesion__usuario=self.request.user)
+
+# Agregamos vistas para el front
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, '¡Cuenta creada exitosamente!')
+            return redirect('dashboard')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
+
+
+@login_required
+def dashboard_view(request):
+    rutinas = Rutina.objects.filter(usuario=request.user)
+    sesiones_recientes = SesionEntrenamiento.objects.filter(usuario=request.user)[:5]
+    return render(request, 'workouts/dashboard.html', {
+        'rutinas': rutinas,
+        'sesiones_recientes': sesiones_recientes,
+    })
+
+
+@login_required
+def rutina_detalle_view(request, rutina_id):
+    # get_object_or_404 + filtro por usuario: si la rutina no es tuya, da 404 (no 403)
+    # esto evita revelar si el objeto existe pero pertenece a otro usuario
+    rutina = get_object_or_404(Rutina, id=rutina_id, usuario=request.user)
+    return render(request, 'workouts/rutina_detalle.html', {'rutina': rutina})

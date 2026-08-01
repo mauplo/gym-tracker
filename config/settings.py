@@ -57,7 +57,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'], # plantillas/layouts base
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -141,3 +141,8 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API para registrar rutinas, sesiones de entrenamiento y progreso de ejercicios.',
     'VERSION': '1.0.0',
 }
+
+# configuración de redirección de login/logout 
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
