@@ -23,4 +23,5 @@ frontend_urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('rutinas/<int:rutina_id>/', views.rutina_detalle_view, name='rutina_detalle'),
+    path('sesiones/nueva/', views.sesion_crear_view, name='sesion_crear'),  
 ]

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.contrib import messages
-from .forms import SignUpForm
+from .forms import SignUpForm, SesionEntrenamientoForm, RegistroSerieFormSet
 
 # Create your views here.
 # ViewSets: la lógica que conecta URLs con lógica de negocio (listar, crear, editar, borrar)
@@ -104,3 +104,35 @@ def rutina_detalle_view(request, rutina_id):
     # esto evita revelar si el objeto existe pero pertenece a otro usuario
     rutina = get_object_or_404(Rutina, id=rutina_id, usuario=request.user)
     return render(request, 'workouts/rutina_detalle.html', {'rutina': rutina})
+
+@login_required
+def sesion_crear_view(request):
+    if request.method == 'POST':
+        sesion_form = SesionEntrenamientoForm(request.POST, usuario=request.user)
+        formset = RegistroSerieFormSet(request.POST, queryset=RegistroSerie.objects.none())
+
+        if sesion_form.is_valid() and formset.is_valid():
+            sesion = sesion_form.save(commit=False)
+            sesion.usuario = request.user  # el dueño se asigna aquí, no viene del form
+            sesion.save()
+
+            registros_guardados = 0
+            for form in formset:
+                # ignora filas vacías que el usuario no llenó
+                if form.cleaned_data and not form.cleaned_data.get('DELETE'):
+                    if form.cleaned_data.get('ejercicio'):
+                        registro = form.save(commit=False)
+                        registro.sesion = sesion
+                        registro.save()
+                        registros_guardados += 1
+
+            messages.success(request, f'Sesión guardada con {registros_guardados} series registradas.')
+            return redirect('dashboard')
+    else:
+        sesion_form = SesionEntrenamientoForm(usuario=request.user)
+        formset = RegistroSerieFormSet(queryset=RegistroSerie.objects.none())
+
+    return render(request, 'workouts/sesion_form.html', {
+        'sesion_form': sesion_form,
+        'formset': formset,
+    })

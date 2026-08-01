@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Nueva sesión{% endblock %}
+{% block content %}
+    <h1>Registrar sesión de entrenamiento</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <h3>Datos de la sesión</h3>
+        {{ sesion_form.as_p }}
+
+        <h3>Series realizadas</h3>
+        {{ formset.management_form }}
+
+        {% for form in formset %}
+            <div class="card">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn">Guardar sesión</button>
+    </form>
+{% endblock %}

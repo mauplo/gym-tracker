@@ -2,7 +2,8 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
     <h1>Tus rutinas</h1>
-
+    <a href="{% url 'sesion_crear' %}" class="btn">+ Registrar sesión</a>
+    <br><br>
     {% if rutinas %}
         {% for rutina in rutinas %}
             <div class="card">
