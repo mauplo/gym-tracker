@@ -25,12 +25,14 @@ Aplicación web para registrar rutinas de gimnasio, sesiones de entrenamiento y 
 | Contenedores   | Docker, Docker Compose               |
 
 ## Modelo de datos
+```
 User (Django built-in)
-├──< Rutina
-│ └──< RutinaEjercicio (M2M con Ejercicio: orden, series/reps objetivo)
-├──< SesionEntrenamiento
-│ └──< RegistroSerie (peso, reps, unidad, por ejercicio)
+ ├──< Rutina
+ │      └──< RutinaEjercicio (M2M con Ejercicio: orden, series/reps objetivo)
+ ├──< SesionEntrenamiento
+ │      └──< RegistroSerie (peso, reps, unidad, por ejercicio)
 Ejercicio (catálogo global: nombre + tipo de equipo)
+```
 
 ## Requisitos previos
 
@@ -123,18 +125,20 @@ pytest --cov=workouts
 ```
 
 ## Estructura del proyecto
+```
 gym-tracker/
-├── config/ # Configuración del proyecto Django (settings, urls raíz)
-├── workouts/ # App principal: modelos, API, tests
-│ ├── models.py
-│ ├── serializers.py
-│ ├── views.py
-│ ├── urls.py
-│ ├── factories.py
-│ └── tests/
-├── docker-compose.yml # Definición del contenedor de PostgreSQL
+├── config/              # Configuración del proyecto Django (settings, urls raíz)
+├── workouts/            # App principal: modelos, API, tests
+│   ├── models.py
+│   ├── serializers.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── factories.py
+│   └── tests/
+├── docker-compose.yml   # Definición del contenedor de PostgreSQL
 ├── requirements.txt
 └── manage.py
+```
 
 ## Roadmap
 
