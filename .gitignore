@@ -147,7 +147,7 @@ activemq-data/
 # SageMath parsed files
 *.sage.py
 
-# Environments
+# Environments & variables
 .env
 .envrc
 .venv
@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Bases de datos locales
+*.sqlite3
+
+# macOS
+.DS_Store
